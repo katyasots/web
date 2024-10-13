@@ -1,74 +1,90 @@
 /* настройки стилей страницы */
 
 html, body {
-    height: 100%;
-    margin: 0;
-  }
-  
-  /* делаем чёрный фон и выравниваем всё по центру */
-  body {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: relative;
-  }
-  
-  /* фон с изображением */
-  #backgroundImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('kitty.jpg'); /* замените на путь к вашему изображению */
-    background-size: cover;
-    background-position: center;
-    z-index: -1; /* чтобы фон был под другими элементами */
-  }
-  
-  /* толщина обводки холста — 1 пиксель, белый цвет */
-  canvas {
-    border: 1px solid white;
-  }
-  
-  /* розовый фон для игрового поля */
-  #game {
-    background-color: pink;
-  }
-  
-  /* стили для холста с информацией о текущей игре */
-  #score {
-    margin-top: 10px;
-  }
-  
-  /* стили для холста с предыдущей фигурой */
-  #next {
-    margin-top: 10px;
-  }
-  
-  /* стили для контекстного меню */
-  #gameOverMenu {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.75);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-  }
-  
-  #gameOverMenu h1 {
-    margin: 0 0 20px;
-    font-size: 36px;
-  }
-  
-  #gameOverMenu button {
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-  }
+  height: 100%;
+  margin: 0;
+}
+
+/* делаем чёрный фон и выравниваем всё по центру */
+body {
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+/* фон с изображением */
+#backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('kitty2.jpg'); /* замените на путь к вашему изображению */
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* чтобы фон был под другими элементами */
+}
+
+/* толщина обводки холста — 1 пиксель, белый цвет */
+canvas {
+  border: 1px solid white;
+}
+
+/* розовый фон для игрового поля */
+#game {
+  background-color: pink;
+}
+
+/* стили для холста с информацией о текущей игре */
+#score {
+  margin-top: 10px;
+}
+
+/* стили для холста с предыдущей фигурой */
+#next {
+  margin-top: 10px;
+}
+
+/* стили для контекстного меню */
+#gameOverMenu {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
+
+#gameOverMenu h1 {
+  margin: 0 0 20px;
+  font-size: 36px;
+}
+
+#gameOverMenu button {
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#gameOverMenu table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#gameOverMenu th, #gameOverMenu td {
+  border: 1px solid white;
+  padding: 8px;
+  text-align: center;
+}
+
+#gameOverMenu th {
+  background-color: rgba(255, 255, 255, 0.2);
+}

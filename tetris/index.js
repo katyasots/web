@@ -19,7 +19,6 @@ var tetrominoSequence = [];
 // размер поля — 10 на 20, и несколько строк ещё находится за видимой областью
 var playfield = [];
 
-
 // получаем доступ к контекстному меню и кнопке перезапуска
 const gameOverMenu = document.getElementById('gameOverMenu');
 const restartButton = document.getElementById('restartButton');
@@ -250,20 +249,60 @@ function placeTetromino() {
   tetromino = getNextTetromino();
 }
 
+let records = [];
+
+function updateRecords() {
+  // Добавляем текущий счет и имя игрока в массив рекордов
+  records.push({ name: name, score: score });
+
+  // Сортируем рекорды по убыванию счета
+  records.sort((a, b) => b.score - a.score);
+
+  // Ограничиваем количество рекордов до 5
+  if (records.length > 5) {
+    records = records.slice(0, 5);
+  }
+
+  // Сохраняем рекорды в localStorage
+  localStorage.setItem('records', JSON.stringify(records));
+}
+
 function showGameOver() {
-  // прекращаем всю анимацию игры
+  // Прекращаем всю анимацию игры
   cancelAnimationFrame(rAF);
-  // ставим флаг окончания
+  // Ставим флаг окончания
   gameOver = true;
-  // показываем контекстное меню
+  // Обновляем рекорды
+  updateRecords();
+  // Отображаем контекстное меню
   gameOverMenu.style.display = 'block';
+
+  // Получаем таблицу рекордов
+  const recordsTable = document.getElementById('recordsTable');
+  // Очищаем текущее содержимое таблицы
+  recordsTable.innerHTML = `
+    <tr>
+      <th>Имя</th>
+      <th>Счет</th>
+    </tr>
+  `;
+
+  // Добавляем рекорды в таблицу
+  records.forEach(record => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${record.name}</td>
+      <td>${record.score}</td>
+    `;
+    recordsTable.appendChild(row);
+  });
 }
 
 // функция для перезапуска игры
 function restartGame() {
-  // скрываем контекстное меню
+  // Скрываем контекстное меню
   gameOverMenu.style.display = 'none';
-  // сбрасываем все переменные
+  // Сбрасываем все переменные
   count = 0;
   gameOver = false;
   score = 0;
@@ -271,7 +310,7 @@ function restartGame() {
   tetrominoSequence = [];
   playfield = [];
 
-  // заполняем сразу массив пустыми ячейками
+  // Заполняем сразу массив пустыми ячейками
   for (let row = -2; row < 20; row++) {
     playfield[row] = [];
 
@@ -280,10 +319,10 @@ function restartGame() {
     }
   }
 
-  // получаем новую фигуру
+  // Получаем новую фигуру
   tetromino = getNextTetromino();
 
-  // начинаем анимацию
+  // Начинаем анимацию
   rAF = requestAnimationFrame(loop);
 }
 
@@ -297,9 +336,6 @@ function showScore() {
   contextScore.font = '18px Courier New';
   contextScore.fillText('Уровень: ' + level, 15, 20);
   contextScore.fillText('Очков:   ' + score, 15, 50);
-  contextScore.fillText('Чемпион: ' + recordName, 160, 20);
-  contextScore.fillText('Рекорд:  ' + record, 160, 50);
-
 }
 
 // рисуем сетку на холсте
@@ -416,7 +452,7 @@ function loop() {
   // начинаем анимацию
   rAF = requestAnimationFrame(loop);
   // очищаем холст
-  context.clearRect(0,0,canvas.width,canvas.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
   // рисуем сетку
   drawGrid();
@@ -429,7 +465,7 @@ function loop() {
         context.fillStyle = colors[name];
 
         // рисуем всё на один пиксель меньше, чтобы получился эффект «в клетку»
-        context.fillRect(col * grid, row * grid, grid-1, grid-1);
+        context.fillRect(col * grid, row * grid, grid - 1, grid - 1);
       }
     }
   }
@@ -461,7 +497,7 @@ function loop() {
         if (tetromino.matrix[row][col]) {
 
           // и снова рисуем на один пиксель меньше
-          context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid-1, grid-1);
+          context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid - 1, grid - 1);
         }
       }
     }
@@ -469,6 +505,11 @@ function loop() {
 
   // рисуем следующую фигуру
   drawNextTetromino();
+}
+
+// Инициализация рекордов при загрузке страницы
+if (localStorage.getItem('records')) {
+  records = JSON.parse(localStorage.getItem('records'));
 }
 
 // старт игры
