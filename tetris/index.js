@@ -74,13 +74,13 @@ const tetrominos = {
 
 // цвет каждой фигуры
 const colors = {
-  'I': 'cyan',
-  'O': 'yellow',
-  'T': 'purple',
-  'S': 'green',
-  'Z': 'red',
-  'J': 'blue',
-  'L': 'orange'
+  'I': 'crimson',
+  'O': 'darkred',
+  'T': 'mediumvioletred',
+  'S': 'firebrick',
+  'Z': 'indianred',
+  'J': 'mediumorchid',
+  'L': 'orchid'
 };
 
 // счётчик
@@ -332,7 +332,7 @@ restartButton.addEventListener('click', restartGame);
 function showScore() {
   contextScore.clearRect(0, 0, canvasScore.width, canvasScore.height);
   contextScore.globalAlpha = 1;
-  contextScore.fillStyle = 'white';
+  contextScore.fillStyle = 'black';
   contextScore.font = '18px Courier New';
   contextScore.fillText('Уровень: ' + level, 15, 20);
   contextScore.fillText('Очков:   ' + score, 15, 50);
