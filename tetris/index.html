@@ -5,13 +5,15 @@
   <title>Тетрис</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
   <!-- рисуем поле для игры -->
   <canvas width="320" height="640" id="game"></canvas>
 
   <!-- добавляем область для вывода информации о текущей игре -->
   <canvas style="border: 0px" width="320" height="100" id="score"></canvas>
+
+  <!-- добавляем область для вывода следующей фигуры -->
+  <canvas width="128" height="128" id="next"></canvas>
 
   <script src="index.js"></script>
 </body>
