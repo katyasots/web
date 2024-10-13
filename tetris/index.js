@@ -1,40 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Тетрис</title>
-    <style>
-      /*настройки стилей страницы*/
-
-      html, body {
-        height: 100%;
-        margin: 0;
-      }
-      /*делаем чёрный фон и выравниваем всё по центру*/
-      body {
-        background: black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      /*толщина обводки холста — 1 пиксель, белый цвет*/
-      canvas {
-        border: 1px solid white;
-      }
-
-
-    </style>
-</head>
-
-<body>
-  <!-- рисуем поле для игры -->
-  <canvas width="320" height="640" id="game"></canvas>
-
-  <!-- добавляем область для вывода информации о текущей игре -->
-  <canvas style="border: 0px" width="320" height="100" id="score"></canvas>
-
-  <script>
-    // License CC0 1.0 Universal 
+// License CC0 1.0 Universal 
     // https://gist.github.com/straker/3c98304f8a6a9174efd8292800891ea1
     // https://tetris.fandom.com/wiki/Tetris_Guideline
 
@@ -134,7 +98,7 @@
     let recordName = '';
 
     // спрашиваем имя игрока при запуске
-    const name = prompt("Ваше имя", "");
+    let name = prompt("Ваше имя", "");
 
 
     // Узнаём размер хранилища
@@ -413,6 +377,3 @@
 
     // старт игры
     rAF = requestAnimationFrame(loop);
-  </script>
-</body>
-</html>
