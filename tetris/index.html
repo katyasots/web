@@ -6,6 +6,9 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- фон с изображением -->
+  <div id="backgroundImage"></div>
+
   <!-- рисуем поле для игры -->
   <canvas width="320" height="640" id="game"></canvas>
 
@@ -14,6 +17,12 @@
 
   <!-- добавляем область для вывода следующей фигуры -->
   <canvas width="128" height="128" id="next"></canvas>
+
+  <!-- контекстное меню для перезапуска игры -->
+  <div id="gameOverMenu" style="display: none;">
+    <h1>GAME OVER!</h1>
+    <button id="restartButton">Перезапустить</button>
+  </div>
 
   <script src="index.js"></script>
 </body>

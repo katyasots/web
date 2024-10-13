@@ -19,6 +19,11 @@ var tetrominoSequence = [];
 // размер поля — 10 на 20, и несколько строк ещё находится за видимой областью
 var playfield = [];
 
+
+// получаем доступ к контекстному меню и кнопке перезапуска
+const gameOverMenu = document.getElementById('gameOverMenu');
+const restartButton = document.getElementById('restartButton');
+
 // заполняем сразу массив пустыми ячейками
 for (let row = -2; row < 20; row++) {
   playfield[row] = [];
@@ -245,24 +250,45 @@ function placeTetromino() {
   tetromino = getNextTetromino();
 }
 
-// показываем надпись Game Over
 function showGameOver() {
   // прекращаем всю анимацию игры
   cancelAnimationFrame(rAF);
   // ставим флаг окончания
   gameOver = true;
-  // рисуем чёрный прямоугольник посередине поля
-  context.fillStyle = 'black';
-  context.globalAlpha = 0.75;
-  context.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
-  // пишем надпись белым моноширинным шрифтом по центру
-  context.globalAlpha = 1;
-  context.fillStyle = 'white';
-  context.font = '36px monospace';
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.fillText('GAME OVER!', canvas.width / 2, canvas.height / 2);
+  // показываем контекстное меню
+  gameOverMenu.style.display = 'block';
 }
+
+// функция для перезапуска игры
+function restartGame() {
+  // скрываем контекстное меню
+  gameOverMenu.style.display = 'none';
+  // сбрасываем все переменные
+  count = 0;
+  gameOver = false;
+  score = 0;
+  level = 1;
+  tetrominoSequence = [];
+  playfield = [];
+
+  // заполняем сразу массив пустыми ячейками
+  for (let row = -2; row < 20; row++) {
+    playfield[row] = [];
+
+    for (let col = 0; col < 10; col++) {
+      playfield[row][col] = 0;
+    }
+  }
+
+  // получаем новую фигуру
+  tetromino = getNextTetromino();
+
+  // начинаем анимацию
+  rAF = requestAnimationFrame(loop);
+}
+
+// добавляем обработчик события для кнопки перезапуска
+restartButton.addEventListener('click', restartGame);
 
 function showScore() {
   contextScore.clearRect(0, 0, canvasScore.width, canvasScore.height);
@@ -288,61 +314,52 @@ function drawGrid() {
   }
 }
 
-// главный цикл игры
-function loop() {
-  // начинаем анимацию
-  rAF = requestAnimationFrame(loop);
+// получаем доступ к холсту для отображения следующей фигуры
+const canvasNext = document.getElementById('next');
+const contextNext = canvasNext.getContext('2d');
+
+// размер квадратика для отображения следующей фигуры
+const gridNext = 32;
+
+// функция для отрисовки следующей фигуры
+function drawNextTetromino() {
   // очищаем холст
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  contextNext.clearRect(0, 0, canvasNext.width, canvasNext.height);
 
   // рисуем сетку
-  drawGrid();
+  contextNext.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+  contextNext.lineWidth = 0.5;
 
-  // рисуем игровое поле с учётом заполненных фигур
-  for (let row = 0; row < 20; row++) {
-    for (let col = 0; col < 10; col++) {
-      if (playfield[row][col]) {
-        const name = playfield[row][col];
-        context.fillStyle = colors[name];
-
-        // рисуем всё на один пиксель меньше, чтобы получился эффект «в клетку»
-        context.fillRect(col * grid, row * grid, grid - 1, grid - 1);
-      }
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+      contextNext.strokeRect(col * gridNext, row * gridNext, gridNext, gridNext);
     }
   }
 
-  // выводим статистику
-  showScore();
+  // рисуем следующую фигуру
+  if (tetrominoSequence.length > 0) {
+    const nextTetromino = tetrominos[tetrominoSequence[tetrominoSequence.length - 1]];
+    const color = colors[tetrominoSequence[tetrominoSequence.length - 1]];
 
-  // рисуем текущую фигуру
-  if (tetromino) {
+    contextNext.fillStyle = color;
 
-    // фигура сдвигается вниз каждые 36 кадров минус значение текущего уровня. Чем больше уровень, тем быстрее падает.
-    if (++count > (36 - level)) {
-      tetromino.row++;
-      count = 0;
-
-      // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
-      if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-        tetromino.row--;
-        placeTetromino();
-      }
-    }
-
-    // не забываем про цвет текущей фигуры
-    context.fillStyle = colors[tetromino.name];
-
-    // отрисовываем её
-    for (let row = 0; row < tetromino.matrix.length; row++) {
-      for (let col = 0; col < tetromino.matrix[row].length; col++) {
-        if (tetromino.matrix[row][col]) {
-
-          // и снова рисуем на один пиксель меньше
-          context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid - 1, grid - 1);
+    for (let row = 0; row < nextTetromino.length; row++) {
+      for (let col = 0; col < nextTetromino[row].length; col++) {
+        if (nextTetromino[row][col]) {
+          contextNext.fillRect(col * gridNext, row * gridNext, gridNext - 1, gridNext - 1);
         }
       }
     }
   }
+}
+
+// главный цикл игры
+// функция для мгновенного падения фигуры
+function dropTetromino() {
+  while (isValidMove(tetromino.matrix, tetromino.row + 1, tetromino.col)) {
+    tetromino.row++;
+  }
+  placeTetromino();
 }
 
 // следим за нажатиями на клавиши
@@ -387,7 +404,72 @@ document.addEventListener('keydown', function (e) {
     // запоминаем строку, куда стала фигура
     tetromino.row = row;
   }
+
+  // пробел — мгновенное падение фигуры
+  if (e.key === ' ') {
+    dropTetromino();
+  }
 });
+
+// главный цикл игры
+function loop() {
+  // начинаем анимацию
+  rAF = requestAnimationFrame(loop);
+  // очищаем холст
+  context.clearRect(0,0,canvas.width,canvas.height);
+
+  // рисуем сетку
+  drawGrid();
+
+  // рисуем игровое поле с учётом заполненных фигур
+  for (let row = 0; row < 20; row++) {
+    for (let col = 0; col < 10; col++) {
+      if (playfield[row][col]) {
+        const name = playfield[row][col];
+        context.fillStyle = colors[name];
+
+        // рисуем всё на один пиксель меньше, чтобы получился эффект «в клетку»
+        context.fillRect(col * grid, row * grid, grid-1, grid-1);
+      }
+    }
+  }
+
+  // выводим статистику
+  showScore();
+
+  // рисуем текущую фигуру
+  if (tetromino) {
+
+    // фигура сдвигается вниз каждые 36 кадров минус значение текущего уровня. Чем больше уровень, тем быстрее падает.
+    if (++count > (36 - level)) {
+      tetromino.row++;
+      count = 0;
+
+      // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
+      if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
+        tetromino.row--;
+        placeTetromino();
+      }
+    }
+
+    // не забываем про цвет текущей фигуры
+    context.fillStyle = colors[tetromino.name];
+
+    // отрисовываем её
+    for (let row = 0; row < tetromino.matrix.length; row++) {
+      for (let col = 0; col < tetromino.matrix[row].length; col++) {
+        if (tetromino.matrix[row][col]) {
+
+          // и снова рисуем на один пиксель меньше
+          context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid-1, grid-1);
+        }
+      }
+    }
+  }
+
+  // рисуем следующую фигуру
+  drawNextTetromino();
+}
 
 // старт игры
 rAF = requestAnimationFrame(loop);
