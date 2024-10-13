@@ -1,0 +1,130 @@
+<!--<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тетрис</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="username-form">
+        <input type="text" id="username" placeholder="Введите ваше имя">
+        <button id="start-game">Начать игру</button>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        <div id="game-info">
+            <div id="score">Очки: 0</div>
+            <div id="level">Уровень: 1</div>
+            <div id="next-figure"></div>
+        </div>
+        <canvas id="game-canvas" width="300" height="600"></canvas>
+    </div>
+
+    <script src="tetris.js"></script>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #username-form {
+            text-align: center;
+        }
+
+        #game-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 800px;
+        }
+
+        #game-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        #game-canvas {
+            border: 2px solid #000;
+        }
+
+        #next-figure {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #000;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        #next-figure div {
+            position: absolute;
+        }
+
+        #controls {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        #left-panel, #right-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #left-panel {
+            margin-right: 20px;
+        }
+
+        #right-panel {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="username-form">
+        <h1>Tetris Game</h1>
+        <input type="text" id="username" placeholder="Введите ваше имя">
+        <button id="start-game">Начать игру</button>
+    </div>
+    <div id="game-container" style="display: none;">
+        <div id="left-panel">
+            <div id="controls">
+                <p>Управление:</p>
+                <p>Стрелка влево: Двигать влево</p>
+                <p>Стрелка вправо: Двигать вправо</p>
+                <p>Стрелка вниз: Ускорить падение</p>
+                <p>Стрелка вверх: Повернуть фигуру</p>
+                <p>Пробел: Сбросить фигуру</p>
+            </div>
+        </div>
+        <div id="game-info">
+            <span id="score">Очки: 0</span>
+            <span id="level">Уровень: 1</span>
+            <canvas id="game-canvas" width="300" height="600"></canvas>
+            <div id="player-name"></div>
+        </div>
+        <div id="right-panel">
+            <div id="next-figure"></div>
+        </div>
+    </div>
+    <script src="tetris.js"></script>
+</body>
+</html>
+
+<!-- 1) в рамку влазят не все фигуры 
+ 2) выровнять на один уровень управление, игровое поле и след фигуру
+ 3) добавить клетки на фигуры и поле-->
