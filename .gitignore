@@ -1,9 +1,1 @@
-home-library/app.js
-home-library/package-lock.json
-home-library/package.json
-home-library/data/books.json
-home-library/public/styles.css
-home-library/.gitignore
-home-library/views/index.pug
-home-library/views/layout.pug
-Лабораторные по Вебу.pdf
+home-library/node_modules

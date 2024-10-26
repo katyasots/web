@@ -1,0 +1,76 @@
+extends layout
+
+block content
+  h1 Home Library
+  form#filterForm
+    label(for='available') Available:
+    input(type='checkbox', id='available', name='available')
+    label(for='overdue') Overdue:
+    input(type='checkbox', id='overdue', name='overdue')
+    button(type='submit') Filter
+
+  ul#bookList
+    each book in books
+      li
+        a(href=`/book/${book.id}`) #{book.title} by #{book.author}
+        if book.available
+          span  (Available)
+        else
+          span  (Borrowed by #{book.borrower}, return by #{book.returnDate})
+        button.deleteButton(data-id=book.id) Delete
+
+  button#addBookButton Add Book
+
+  dialog#addBookDialog
+    form(method='post', action='/book')
+      label(for='title') Title:
+      input(type='text', id='title', name='title', required)
+      label(for='author') Author:
+      input(type='text', id='author', name='author', required)
+      label(for='year') Year:
+      input(type='number', id='year', name='year', required)
+      button(type='submit') Add
+      button(type='button', id='cancelAddBook') Cancel
+
+  script.
+    document.getElementById('filterForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const available = document.getElementById('available').checked;
+      const overdue = document.getElementById('overdue').checked;
+      fetch(`/books?available=${available}&overdue=${overdue}`)
+        .then(response => response.json())
+        .then(data => {
+          const bookList = document.getElementById('bookList');
+          bookList.innerHTML = '';
+          data.forEach(book => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <a href="/book/${book.id}">${book.title} by ${book.author}</a>
+              ${book.available ? '<span> (Available)</span>' : `<span> (Borrowed by ${book.borrower}, return by ${book.returnDate})</span>`}
+              <button class="deleteButton" data-id="${book.id}">Delete</button>
+            `;
+            bookList.appendChild(li);
+          });
+        });
+    });
+
+    document.getElementById('addBookButton').addEventListener('click', () => {
+      document.getElementById('addBookDialog').showModal();
+    });
+
+    document.getElementById('cancelAddBook').addEventListener('click', () => {
+      document.getElementById('addBookDialog').close();
+    });
+
+    document.querySelectorAll('.deleteButton').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const bookId = e.target.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this book?')) {
+          fetch(`/book/${bookId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+              window.location.reload();
+            });
+        }
+      });
+    });
