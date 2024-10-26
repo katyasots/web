@@ -1,37 +1,43 @@
 extends layout
 
 block content
-  h1 Home Library
+  // Заголовок страницы
+  h1 Домашняя библиотека
+  // Форма для фильтрации книг
   form#filterForm
-    label(for='available') Available:
+    label(for='available') В наличии:
     input(type='checkbox', id='available', name='available')
-    label(for='overdue') Overdue:
+    label(for='overdue') Просроченные:
     input(type='checkbox', id='overdue', name='overdue')
-    button(type='submit') Filter
+    button(type='submit') Фильтровать
 
+  // Список книг
   ul#bookList
     each book in books
       li
-        a(href=`/book/${book.id}`) #{book.title} by #{book.author}
+        a(href=`/book/${book.id}`) #{book.title} от #{book.author}
         if book.available
-          span  (Available)
+          span  (В наличии)
         else
-          span  (Borrowed by #{book.borrower}, return by #{book.returnDate})
-        button.deleteButton(data-id=book.id) Delete
+          span  (Взята #{book.borrower}, вернуть до #{book.returnDate})
+        button.deleteButton(data-id=book.id) Удалить
 
-  button#addBookButton Add Book
+  // Кнопка для добавления новой книги
+  button#addBookButton Добавить книгу
 
+  // Модальное окно для добавления новой книги
   dialog#addBookDialog
     form(method='post', action='/book')
-      label(for='title') Title:
+      label(for='title') Название:
       input(type='text', id='title', name='title', required)
-      label(for='author') Author:
+      label(for='author') Автор:
       input(type='text', id='author', name='author', required)
-      label(for='year') Year:
+      label(for='year') Год:
       input(type='number', id='year', name='year', required)
-      button(type='submit') Add
-      button(type='button', id='cancelAddBook') Cancel
+      button(type='submit') Добавить
+      button(type='button', id='cancelAddBook') Отмена
 
+  // JavaScript для фильтрации и управления списком книг
   script.
     document.getElementById('filterForm').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -45,9 +51,9 @@ block content
           data.forEach(book => {
             const li = document.createElement('li');
             li.innerHTML = `
-              <a href="/book/${book.id}">${book.title} by ${book.author}</a>
-              ${book.available ? '<span> (Available)</span>' : `<span> (Borrowed by ${book.borrower}, return by ${book.returnDate})</span>`}
-              <button class="deleteButton" data-id="${book.id}">Delete</button>
+              <a href="/book/${book.id}">${book.title} от ${book.author}</a>
+              ${book.available ? '<span> (В наличии)</span>' : `<span> (Взята ${book.borrower}, вернуть до ${book.returnDate})</span>`}
+              <button class="deleteButton" data-id="${book.id}">Удалить</button>
             `;
             bookList.appendChild(li);
           });
@@ -65,7 +71,7 @@ block content
     document.querySelectorAll('.deleteButton').forEach(button => {
       button.addEventListener('click', (e) => {
         const bookId = e.target.getAttribute('data-id');
-        if (confirm('Are you sure you want to delete this book?')) {
+        if (confirm('Вы уверены, что хотите удалить эту книгу?')) {
           fetch(`/book/${bookId}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {

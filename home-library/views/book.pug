@@ -1,0 +1,84 @@
+extends layout
+
+block content
+  // Заголовок страницы с названием книги
+  h1 #{book.title}
+  // Информация о книге
+  p Автор: #{book.author}
+  p Год: #{book.year}
+  if book.available
+    p Статус: В наличии
+    button#checkoutButton Выдать
+    // Модальное окно для выдачи книги
+    dialog#checkoutDialog
+      form(method='post', action=`/book/${book.id}/checkout`)
+        label(for='borrower') Читатель:
+        input(type='text', id='borrower', name='borrower', required)
+        label(for='returnDate') Дата возврата:
+        input(type='date', id='returnDate', name='returnDate', required)
+        button(type='submit') Подтвердить
+        button(type='button', id='cancelCheckout') Отмена
+  else
+    p Статус: Взята #{book.borrower}, вернуть до #{book.returnDate}
+    button#returnButton Вернуть
+
+  // Кнопка для редактирования информации о книге
+  button#editButton Редактировать
+  // Модальное окно для редактирования информации о книге
+  dialog#editDialog
+    form(method='post', action=`/book/${book.id}`)
+      label(for='title') Название:
+      input(type='text', id='title', name='title', value=book.title, required)
+      label(for='author') Автор:
+      input(type='text', id='author', name='author', value=book.author, required)
+      label(for='year') Год:
+      input(type='number', id='year', name='year', value=book.year, required)
+      button(type='submit') Сохранить
+      button(type='button', id='cancelEdit') Отмена
+
+  // JavaScript для управления модальными окнами и обновления списка книг
+  script.
+    document.getElementById('checkoutButton').addEventListener('click', () => {
+      document.getElementById('checkoutDialog').showModal();
+    });
+
+    document.getElementById('cancelCheckout').addEventListener('click', () => {
+      document.getElementById('checkoutDialog').close();
+    });
+
+    document.getElementById('returnButton').addEventListener('click', () => {
+      fetch(`/book/${book.id}/return`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          updateBookList();
+          window.location.reload();
+        });
+    });
+
+    document.getElementById('editButton').addEventListener('click', () => {
+      document.getElementById('editDialog').showModal();
+    });
+
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+      document.getElementById('editDialog').close();
+    });
+
+    function updateBookList() {
+      const available = document.getElementById('available').checked;
+      const overdue = document.getElementById('overdue').checked;
+      fetch(`/books?available=${available}&overdue=${overdue}`)
+        .then(response => response.json())
+        .then(data => {
+          const bookList = document.getElementById('bookList');
+          bookList.innerHTML = '';
+          data.forEach(book => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <a href="/book/${book.id}">${book.title} от ${book.author}</a>
+              ${book.available ? '<span> (В наличии)</span>' : `<span> (Взята ${book.borrower}, вернуть до ${book.returnDate})</span>`}
+              <button class="deleteButton" data-id="${book.id}">Удалить</button>
+            `;
+            bookList.appendChild(li);
+          });
+        });
+    }

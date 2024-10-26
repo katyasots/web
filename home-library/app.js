@@ -24,10 +24,12 @@ function saveBooks() {
 }
 
 // Routes
+// Главная страница со списком книг
 app.get('/', (req, res) => {
     res.render('index', { books });
 });
 
+// Маршрут для фильтрации книг
 app.get('/books', (req, res) => {
     const available = req.query.available === 'true';
     const overdue = req.query.overdue === 'true';
@@ -45,11 +47,13 @@ app.get('/books', (req, res) => {
     res.json(filteredBooks);
 });
 
+// Страница с информацией о книге
 app.get('/book/:id', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     res.render('book', { book });
 });
 
+// Маршрут для добавления новой книги
 app.post('/book', (req, res) => {
     const newBook = {
         id: books.length + 1,
@@ -66,6 +70,7 @@ app.post('/book', (req, res) => {
     res.redirect('/');
 });
 
+// Маршрут для редактирования информации о книге
 app.post('/book/:id', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     if (book) {
@@ -75,10 +80,11 @@ app.post('/book/:id', (req, res) => {
         saveBooks();
         res.redirect(`/book/${book.id}`);
     } else {
-        res.status(404).json({ message: 'Book not found' });
+        res.status(404).json({ message: 'Книга не найдена' });
     }
 });
 
+// Маршрут для выдачи книги
 app.post('/book/:id/checkout', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     if (book) {
@@ -88,10 +94,11 @@ app.post('/book/:id/checkout', (req, res) => {
         saveBooks();
         res.json(book);
     } else {
-        res.status(404).json({ message: 'Book not found' });
+        res.status(404).json({ message: 'Книга не найдена' });
     }
 });
 
+// Маршрут для возврата книги
 app.post('/book/:id/return', (req, res) => {
     const book = books.find(b => b.id === parseInt(req.params.id));
     if (book) {
@@ -101,22 +108,23 @@ app.post('/book/:id/return', (req, res) => {
         saveBooks();
         res.json(book);
     } else {
-        res.status(404).json({ message: 'Book not found' });
+        res.status(404).json({ message: 'Книга не найдена' });
     }
 });
 
+// Маршрут для удаления книги
 app.delete('/book/:id', (req, res) => {
     const bookIndex = books.findIndex(b => b.id === parseInt(req.params.id));
     if (bookIndex !== -1) {
         books.splice(bookIndex, 1);
         saveBooks();
-        res.json({ message: 'Book deleted' });
+        res.json({ message: 'Книга удалена' });
     } else {
-        res.status(404).json({ message: 'Book not found' });
+        res.status(404).json({ message: 'Книга не найдена' });
     }
 });
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Сервер запущен на http://localhost:${PORT}`);
 });

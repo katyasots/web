@@ -4,15 +4,24 @@
     "title": "е6пенрперкр",
     "author": "епккпекпек",
     "year": "555555",
-    "available": true,
-    "borrower": null,
-    "returnDate": null
+    "available": false,
+    "borrower": "katya",
+    "returnDate": "2024-10-31"
   },
   {
     "id": 2,
     "title": "gbrgrg",
     "author": "r3r34r34r3",
     "year": "323232",
+    "available": true,
+    "borrower": null,
+    "returnDate": null
+  },
+  {
+    "id": 3,
+    "title": " ашшкоашщмо",
+    "author": "вувввввввв",
+    "year": "7",
     "available": true,
     "borrower": null,
     "returnDate": null
