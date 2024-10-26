@@ -1,11 +1,9 @@
-/* настройки стилей страницы */
-
 html, body {
   height: 100%;
   margin: 0;
 }
 
-/* делаем чёрный фон и выравниваем всё по центру */
+/* выравниваем всё по центру */
 body {
   background: black;
   display: flex;
@@ -22,13 +20,13 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('kitty2.jpg'); /* замените на путь к вашему изображению */
+  background-image: url('kitty2.jpg'); 
   background-size: cover;
   background-position: center;
-  z-index: -1; /* чтобы фон был под другими элементами */
+  z-index: -1; /* фон под другими элементами */
 }
 
-/* толщина обводки холста — 1 пиксель, белый цвет */
+/* толщина обводки холста*/
 canvas {
   border: 1px solid white;
 }
@@ -43,7 +41,7 @@ canvas {
   margin-top: 10px;
 }
 
-/* стили для холста с предыдущей фигурой */
+/* стили для холста со след фигурой */
 #next {
   margin-top: 10px;
 }
